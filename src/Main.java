@@ -19,24 +19,26 @@ public class Main {
 //        int i = uniqueMorseRepresentations(words);
 //        System.out.println(i);
         /*---------------------------------------------*/
-        int[][] A = new int[][]{{1, 1, 0, 0}, {1, 0, 0, 1}, {0, 1, 1, 1}, {1, 0, 1, 0}};
-        int[][] ints1 = flipAndInvertImage(A);
-        for (int i = 0; i < ints1.length; i++) {
-            for (int j = 0; j < ints1.length; j++) {
-                System.out.print(ints1[i][j] + ",");
-            }
-            System.out.println(" ");
-        }
-
-        int[][] B = new int[][]{{1, 1, 0}, {1, 0, 1}, {0, 0, 0}};
-        int[][] ints2 = flipAndInvertImage(B);
-        for (int i = 0; i < ints2.length; i++) {
-            for (int j = 0; j < ints2.length; j++) {
-                System.out.print(ints2[i][j] + ",");
-            }
-            System.out.println(" ");
-        }
-
+//        int[][] A = new int[][]{{1, 1, 0, 0}, {1, 0, 0, 1}, {0, 1, 1, 1}, {1, 0, 1, 0}};
+//        int[][] ints1 = flipAndInvertImage(A);
+//        for (int i = 0; i < ints1.length; i++) {
+//            for (int j = 0; j < ints1.length; j++) {
+//                System.out.print(ints1[i][j] + ",");
+//            }
+//            System.out.println(" ");
+//        }
+//
+//        int[][] B = new int[][]{{1, 1, 0}, {1, 0, 1}, {0, 0, 0}};
+//        int[][] ints2 = flipAndInvertImage(B);
+//        for (int i = 0; i < ints2.length; i++) {
+//            for (int j = 0; j < ints2.length; j++) {
+//                System.out.print(ints2[i][j] + ",");
+//            }
+//            System.out.println(" ");
+//        }
+        /*---------------------------------------------*/
+        int i = hammingDistance(1, 4);
+        System.out.println(i);
 
     }
 
@@ -140,6 +142,7 @@ public class Main {
      * Notes:
      * 1 <= A.length = A[0].length <= 20
      * 0 <= A[i][j] <= 1
+     *
      * @since 2018-5-30
      */
     public static int[][] flipAndInvertImage(int[][] A) {
@@ -204,4 +207,59 @@ public class Main {
 //
 //        return A;
 //    }
+
+    /**
+     * The Hamming distance between two integers is the number of positions
+     * at which the corresponding bits are different.
+     * <p>
+     * Given two integers x and y, calculate the Hamming distance.
+     * <p>
+     * Note:
+     * 0 ≤ x, y < 231.
+     * <p>
+     * Example:
+     * <p>
+     * Input: x = 1, y = 4
+     * <p>
+     * Output: 2
+     * <p>
+     * Explanation:
+     * 1   (0 0 0 1)
+     * 4   (0 1 0 0)
+     * ↑   ↑
+     * <p>
+     * The above arrows point to positions where the corresponding bits are different.
+     */
+    public static int hammingDistance(int x, int y) {
+        if (x < y) {
+            int temp = y;
+            y = x;
+            x = temp;
+        }
+        //大数
+        char[] one = Integer.toBinaryString(x).toCharArray();
+
+        char[] two = Integer.toBinaryString(y).toCharArray();
+        int num = 0;
+        int index = two.length-1;
+        for (int i = 0; i < one.length; i++) {
+            if (i < two.length) {
+                if (one[one.length-i-1]!=two[index]){
+                    num++;
+                }
+                index--;
+            }else {
+                if (one[one.length-i-1] == 49){
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
+
+
+    /*one-line java solution*/
+    public int hammingDistanceSolution(int x, int y) {
+        return Integer.bitCount(x ^ y);
+    }
 }
