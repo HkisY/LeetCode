@@ -37,8 +37,17 @@ public class Main {
 //            System.out.println(" ");
 //        }
         /*---------------------------------------------*/
-        int i = hammingDistance(1, 4);
-        System.out.println(i);
+//        int i = hammingDistance(1, 4);
+//        System.out.println(i);
+        /*---------------------------------------------*/
+        String s = "UDUDUDUDUDUDLLLLLLRRRRRR";
+        boolean b = judgeCircle(s);
+        System.out.println(b);
+        String move = "LL";
+        boolean flag = judgeCircle(move);
+        System.out.println(flag);
+
+
 
     }
 
@@ -196,17 +205,17 @@ public class Main {
     /**
      * 按位异或直接赋值并转换
      */
-//    public int[][] flipAndInvertImage(int[][] A) {
-//        int C = A[0].length;
-//        for (int[] row: A)
-//            for (int i = 0; i < (C + 1) / 2; ++i) {
-//                int tmp = row[i] ^ 1;
-//                row[i] = row[C - 1 - i] ^ 1;
-//                row[C - 1 - i] = tmp;
-//            }
-//
-//        return A;
-//    }
+    public int[][] flipAndInvertImageSolution(int[][] A) {
+        int C = A[0].length;
+        for (int[] row : A)
+            for (int i = 0; i < (C + 1) / 2; ++i) {
+                int tmp = row[i] ^ 1;
+                row[i] = row[C - 1 - i] ^ 1;
+                row[C - 1 - i] = tmp;
+            }
+
+        return A;
+    }
 
     /**
      * The Hamming distance between two integers is the number of positions
@@ -229,6 +238,8 @@ public class Main {
      * ↑   ↑
      * <p>
      * The above arrows point to positions where the corresponding bits are different.
+     *
+     * @since 2018-05-31
      */
     public static int hammingDistance(int x, int y) {
         if (x < y) {
@@ -241,15 +252,15 @@ public class Main {
 
         char[] two = Integer.toBinaryString(y).toCharArray();
         int num = 0;
-        int index = two.length-1;
+        int index = two.length - 1;
         for (int i = 0; i < one.length; i++) {
             if (i < two.length) {
-                if (one[one.length-i-1]!=two[index]){
+                if (one[one.length - i - 1] != two[index]) {
                     num++;
                 }
                 index--;
-            }else {
-                if (one[one.length-i-1] == 49){
+            } else {
+                if (one[one.length - i - 1] == 49) {
                     num++;
                 }
             }
@@ -258,8 +269,56 @@ public class Main {
     }
 
 
-    /*one-line java solution*/
+    /**
+     * one-line java solution
+     * \
+     */
     public int hammingDistanceSolution(int x, int y) {
         return Integer.bitCount(x ^ y);
+    }
+
+    /**
+     * Initially, there is a Robot at position (0, 0). Given a sequence of its moves,
+     * judge if this robot makes a circle, which means it moves back to the original place.
+     * <p>
+     * The move sequence is represented by a string. And each move is represent by a character.
+     * The valid robot moves are R (Right), L (Left), U (Up) and D (down).
+     * The output should be true or false representing whether the robot makes a circle.
+     * <p>
+     * Example 1:
+     * Input: "UD"
+     * Output: true
+     * Example 2:
+     * Input: "LL"
+     * Output: false
+     *
+     * @since 2018-05-31
+     */
+    public static boolean judgeCircle(String moves) {
+        char[] chars = moves.toCharArray();
+        int up = 0;
+        int down = 0;
+        int left = 0;
+        int right = 0;
+        for (char c : chars) {
+            switch (c) {
+                case 'U':
+                    up++;
+                    break;
+                case 'D':
+                    down++;
+                    break;
+                case 'L':
+                    left++;
+                    break;
+                case 'R':
+                    right++;
+                    break;
+            }
+        }
+        if (up == down && left == right) {
+            return true;
+        }
+        return false;
     }
 }
