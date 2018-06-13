@@ -47,20 +47,25 @@ public class Main {
 //        boolean flag = judgeCircle(move);
 //        System.out.println(flag);
         /*---------------------------------------------*/
-        TreeNode a = new TreeNode(5);
-        TreeNode b = new TreeNode(3, a, null);
-        TreeNode f = new TreeNode(2);
-        //主节点
-        TreeNode c = new TreeNode(1, b, f);
-
-        TreeNode l = new TreeNode(4);
-        TreeNode m = new TreeNode(1, null, l);
-        TreeNode n = new TreeNode(7);
-        TreeNode o = new TreeNode(3, null, n);
-        //主节点
-        TreeNode p = new TreeNode(2, m, o);
-        TreeNode resultTree = mergeTrees(c, p);
-        System.out.println(resultTree);
+//        TreeNode a = new TreeNode(5);
+//        TreeNode b = new TreeNode(3, a, null);
+//        TreeNode f = new TreeNode(2);
+//        //主节点
+//        TreeNode c = new TreeNode(1, b, f);
+//
+//        TreeNode l = new TreeNode(4);
+//        TreeNode m = new TreeNode(1, null, l);
+//        TreeNode n = new TreeNode(7);
+//        TreeNode o = new TreeNode(3, null, n);
+//        //主节点
+//        TreeNode p = new TreeNode(2, m, o);
+//        TreeNode resultTree = mergeTrees(c, p);
+//        System.out.println(resultTree);
+        /*---------------------------------------------*/
+        List<Integer> number = getNumber(10);
+        System.out.println(number);
+        List<Integer> list = selfDividingNumbers(1, 22);
+        System.out.println(list);
 
     }
 
@@ -404,4 +409,97 @@ public class Main {
         t1.right = mergeTrees(t1.right, t2.right);
         return t1;
     }
+
+    /**
+     * A self-dividing number is a number that is divisible by every digit it contains.
+
+     For example, 128 is a self-dividing number because 128 % 1 == 0, 128 % 2 == 0, and 128 % 8 == 0.
+     Also, a self-dividing number is not allowed to contain the digit zero.
+
+     Given a lower and upper number bound, output a list of every possible self dividing number,
+     including the bounds if possible.
+
+     Example 1:
+     Input:
+     left = 1, right = 22
+     Output: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+     Note:
+
+     The boundaries of each input argument are 1 <= left <= right <= 10000.
+     */
+    public static List<Integer> selfDividingNumbers(int left, int right) {
+        if (left > right) {
+            int temp = left;
+            left = right;
+            right = temp;
+        }
+        //存放符合结果的数字集
+        List<Integer> result = new ArrayList<>();
+        for (; left <= right; left++) {
+            List<Integer> list = getNumber(left);
+            if (list.contains(0)) {
+                continue;
+            }
+            boolean flag = true;
+            for (Integer integer : list) {
+                if (left % integer != 0) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                result.add(left);
+            }
+
+        }
+        //存放将数字按十位 百位 切分后的数字集
+        return result;
+    }
+
+    private static List<Integer> getNumber(int source) {
+        List<Integer> list = new ArrayList<>();
+        for (int num = 10; source % num <= source; num = num * 10) {
+            int front = source % num;
+            int middlenum = num / 10;
+            int target = (front - front % middlenum) / middlenum;
+            list.add(target);
+
+            if (front == source) {
+                break;
+            }
+        }
+        return list;
+    }
+
+    /**
+     *
+     *
+     public List<Integer> selfDividingNumbers(int left, int right) {
+         List<Integer> ans = new ArrayList();
+         for (int n = left; n <= right; ++n) {
+            if (selfDividing(n)) ans.add(n);
+            }
+            return ans;
+     }
+
+     public boolean selfDividing(int n) {
+         for (char c : String.valueOf(n).toCharArray()) {
+             if (c == '0' || (n % (c - '0') > 0))
+             return false;
+         }
+         return true;
+     }
+
+     Alternate implementation of selfDividing:
+
+     public boolean selfDividing(int n) {
+         int x = n;
+         while (x > 0) {
+             int d = x % 10;
+             x /= 10;
+             if (d == 0 || (n % d) > 0) return false;
+         }
+         return true;
+     }
+     */
+
 }
