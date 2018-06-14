@@ -62,10 +62,13 @@ public class Main {
 //        TreeNode resultTree = mergeTrees(c, p);
 //        System.out.println(resultTree);
         /*---------------------------------------------*/
-        List<Integer> number = getNumber(10);
-        System.out.println(number);
-        List<Integer> list = selfDividingNumbers(1, 22);
-        System.out.println(list);
+//        List<Integer> number = getNumber(10);
+//        System.out.println(number);
+//        List<Integer> list = selfDividingNumbers(1, 22);
+//        System.out.println(list);
+        /*---------------------------------------------*/
+        int[] num = {1,3,4,2,8};
+        quickSort(num);
 
     }
 
@@ -471,35 +474,96 @@ public class Main {
     }
 
     /**
-     *
-     *
-     public List<Integer> selfDividingNumbers(int left, int right) {
-         List<Integer> ans = new ArrayList();
-         for (int n = left; n <= right; ++n) {
-            if (selfDividing(n)) ans.add(n);
-            }
-            return ans;
-     }
-
-     public boolean selfDividing(int n) {
-         for (char c : String.valueOf(n).toCharArray()) {
-             if (c == '0' || (n % (c - '0') > 0))
-             return false;
-         }
-         return true;
-     }
-
-     Alternate implementation of selfDividing:
-
-     public boolean selfDividing(int n) {
-         int x = n;
-         while (x > 0) {
-             int d = x % 10;
-             x /= 10;
-             if (d == 0 || (n % d) > 0) return false;
-         }
-         return true;
-     }
+     * better solution
+     * @param left
+     * @param right
+     * @return
      */
+    public List<Integer> selfDividingNumber(int left, int right) {
+        List<Integer> ans = new ArrayList();
+        for (int n = left; n <= right; ++n) {
+            if (selfDividing(n)) ans.add(n);
+        }
+        return ans;
+    }
+
+    public boolean selfDividing(int n) {
+        for (char c : String.valueOf(n).toCharArray()) {
+            if (c == '0' || (n % (c - '0') > 0))
+                return false;
+        }
+        return true;
+    }
+
+    //Alternate implementation of selfDividing:
+
+    //another method
+    public boolean selfDividin(int n) {
+        int x = n;
+        while (x > 0) {
+            int d = x % 10;
+            x /= 10;
+            if (d == 0 || (n % d) > 0) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Given an array of 2n integers, your task is to group these integers into n pairs of integer,
+     * say (a1, b1), (a2, b2), ..., (an, bn) which makes sum of min(ai, bi) for all i from 1 to n as large as possible.
+
+     Example 1:
+     Input: [1,4,3,2]
+
+     Output: 4
+     Explanation: n is 2, and the maximum sum of pairs is 4 = min(1, 2) + min(3, 4).
+     Note:
+     n is a positive integer, which is in the range of [1, 10000].
+     All the integers in the array will be in the range of [-10000, 10000].
+     */
+    public static int arrayPairSum(int[] nums) {
+        //数组无序 故需要排序
+        //自写快排
+        //API中的排序算法        Arrays.sort(nums);
+        quickSort(nums);
+        int resualt = 0;
+        for (int i =0;i<nums.length;i++){
+            if (i%2!=0){
+                resualt+=nums[i-1];
+            }
+        }
+        return resualt;
+    }
+
+    /**
+     * 快排
+     */
+    public static void quickSort(int[] array){
+        _quickSort(array, 0, array.length - 1);
+        System.out.println(Arrays.toString(array) + " quickSort");
+    }
+    private static int getMiddle(int[] list, int low, int high) {
+        int tmp = list[low];    //数组的第一个作为中轴
+        while (low < high) {
+            while (low < high && list[high] >= tmp) {
+                high--;
+            }
+            list[low] = list[high];   //比中轴小的记录移到低端
+            while (low < high && list[low] <= tmp) {
+                low++;
+            }
+            list[high] = list[low];   //比中轴大的记录移到高端
+        }
+        list[low] = tmp;              //中轴记录到尾
+        return low;                  //返回中轴的位置
+    }
+    private static void _quickSort(int[] list,int low, int high){
+        if(low<high){
+            int middle = getMiddle(list,low,high);
+            _quickSort(list,low,middle - 1);
+            _quickSort(list,middle + 1,high);
+        }
+    }
+
 
 }
