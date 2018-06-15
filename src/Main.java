@@ -67,8 +67,14 @@ public class Main {
 //        List<Integer> list = selfDividingNumbers(1, 22);
 //        System.out.println(list);
         /*---------------------------------------------*/
-        int[] num = {1,3,4,2,8};
-        quickSort(num);
+//        int[] num = {1,3,4,2,8};
+//        quickSort(num);
+//        int resualt = arrayPairSum(num);
+        /*---------------------------------------------*/
+        int[] widths = {4,7,6,4,10,5,3,10,10,7,4,4,6,7,10,10,8,7,2,6,3,3,4,7,2,4};
+        String S = "kjvswlxlss";
+        int[] ints = numberOfLines(widths, S);
+        System.out.println(Arrays.toString(ints));
 
     }
 
@@ -565,5 +571,145 @@ public class Main {
         }
     }
 
+    /**
+     * We are to write the letters of a given string S, from left to right into lines.
+     * Each line has maximum width 100 units, and if writing a letter would cause the
+     * width of the line to exceed 100 units, it is written on the next line.
+     * We are given an array widths, an array where widths[0] is the width of 'a',
+     * widths[1] is the width of 'b', ..., and widths[25] is the width of 'z'.
 
+     Now answer two questions: how many lines have at least one character from S,
+     and what is the width used by the last such line? Return your answer as an integer list of length 2.
+
+
+
+     Example :
+     Input:
+     widths = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+     S = "abcdefghijklmnopqrstuvwxyz"
+     Output: [3, 60]
+     Explanation:
+     All letters have the same length of 10. To write all 26 letters,
+     we need two full lines and one line with 60 units.
+     Example :
+     Input:
+     widths = [4,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+     S = "bbbcccdddaaa"
+     Output: [2, 4]
+     Explanation:
+     All letters except 'a' have the same length of 10, and
+     "bbbcccdddaa" will cover 9 * 10 + 2 * 4 = 98 units.
+     For the last 'a', it is written on the second line because
+     there is only 2 units left in the first line.
+     So the answer is 2 lines, plus 4 units in the second line.
+
+
+     Note:
+
+     The length of S will be in the range [1, 1000].
+     S will only contain lowercase letters.
+     widths is an array of length 26.
+     widths[i] will be in the range of [2, 10].
+     *
+     *
+     *
+     * 草稿代码
+     */
+    public static int[] numberOfLines(int[] widths, String S) {
+        char[] chars = S.toCharArray();
+        //行数初始化即为第一行
+        int line = 1, units = 0;
+        for (int i = 0; i < chars.length; i++) {
+            //不需要进行强转
+            int index = chars[i] - 97;
+            units = units + widths[index];
+            while (units > 100) {
+                int minusUnits = units - widths[index];
+                //考虑到字符所占units不可能比100大这种不合理情况 故此处循环只要进来就只执行一次
+                if (minusUnits <= 100) {
+                    line++;
+                    units = units - minusUnits;
+                    System.out.println(line + ":" + units);
+                    //此循环只执行一次
+                    break;
+
+                }
+            }
+        }
+        return new int[]{line, units};
+    }
+
+    /**
+     * 上面方法优化
+     * @param widths
+     * @param S
+     * @return
+     */
+    public int[] solutionNumberOfLines(int[] widths, String S) {
+        int lines = 1, width = 0;
+        for (char c: S.toCharArray()) {
+            int w = widths[c - 'a'];
+            width += w;
+            if (width > 100) {
+                lines++;
+                width = w;
+            }
+        }
+
+        return new int[]{lines, width};
+    }
+
+    /**
+     * 此种方法 只试用于S中相同字符相连的情况
+     * @param widths
+     * @param S
+     * @return
+     */
+    public int[] wrongNumberOfLines(int[] widths, String S) {
+        char[] chars = S.toCharArray();
+        //统计相同字符出现的次数
+        //将字符加入set集合 可判断是否重复
+        Map<Character, Integer> middle = new HashMap<>();
+        Set<Character> key = new HashSet<>();
+        for (char word : chars) {
+            if (!key.contains(word)) {
+                key.add(word);
+                middle.put(word, 1);
+            } else {
+                int i = middle.get(word);
+                middle.put(word, ++i);
+            }
+        }
+        //行数初始化即为第一行
+        int line = 1, units = 0;
+        for (int i = 0; i < chars.length; i++) {
+            //此字符为 chars【i】 数量为 middle.get(chars[i])
+            Integer integer = middle.get(chars[i]);
+            i += integer - 1;
+            //不需要进行强转
+            int index = chars[i] - 97;
+            units = units + widths[index] * integer;
+            while (units > 100) {
+                for (int j = 1; j <= integer; j++) {
+                    int minusUnits = units - widths[index] * j;
+                    //考虑到字符所占units不可能比100大这种不合理情况 故此处循环只要进来就只执行一次
+                    if (minusUnits <= 100) {
+                        int changeLine = ((integer - j) * widths[index]) / 100;
+                        if (changeLine == 0) {
+                            line++;
+                            units = units - minusUnits;
+                            //此循环只执行一次
+                            break;
+                        } else {
+                            line += changeLine;
+                            units = units - minusUnits;
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+        return new int[]{line, units};
+    }
 }
