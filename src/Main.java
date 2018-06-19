@@ -82,6 +82,10 @@ public class Main {
 //            System.out.println(s1);
 //        }
         /*---------------------------------------------*/
+        String S = "baaa";
+        char C = 'b';
+        int[] ints = shortestToChar(S, C);
+        System.out.println(Arrays.toString(ints));
 
     }
 
@@ -798,8 +802,59 @@ public class Main {
      S string length is in [1, 10000].
      C is a single character, and guaranteed to be in string S.
      All letters in S and C are lowercase.
+     * @since 2018-06-19
      */
     public static int[] shortestToChar(String S, char C) {
-        return null;
+        char[] chars = S.toCharArray();
+        int[] array = new int[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == C) {
+                array[i] = 0;
+                continue;
+            }
+            Integer left = 1000000;
+            Integer right = 1000000;
+            //向右判断距离
+            for (int j = i; j < chars.length; j++) {
+                if (chars[j] == C) {
+                    right = j - i;
+                    break;
+                }
+            }
+            //向左判断
+            for (int k = i; k >= 0; k--) {
+                if (chars[k] == C) {
+                    left = i - k;
+                    break;
+                }
+            }
+            if (right > left) {
+                array[i] = left;
+            } else {
+                array[i] = right;
+            }
+        }
+        return array;
+    }
+    /**
+     * solution
+     */
+    public int[] shortestToCharSolution(String S, char C) {
+        int N = S.length();
+        int[] ans = new int[N];
+        int prev = Integer.MIN_VALUE / 2;
+
+        for (int i = 0; i < N; ++i) {
+            if (S.charAt(i) == C) prev = i;
+            ans[i] = i - prev;
+        }
+
+        prev = Integer.MAX_VALUE / 2;
+        for (int i = N-1; i >= 0; --i) {
+            if (S.charAt(i) == C) prev = i;
+            ans[i] = Math.min(ans[i], prev - i);
+        }
+
+        return ans;
     }
 }
