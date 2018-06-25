@@ -82,10 +82,21 @@ public class Main {
 //            System.out.println(s1);
 //        }
         /*---------------------------------------------*/
-        String S = "baaa";
-        char C = 'b';
-        int[] ints = shortestToChar(S, C);
-        System.out.println(Arrays.toString(ints));
+//        String S = "baaa";
+//        char C = 'b';
+//        int[] ints = shortestToChar(S, C);
+//        System.out.println(Arrays.toString(ints));
+        /*---------------------------------------------*/
+//        int a = 5;
+//        int b = 32491;
+//        int complement = findComplement(a);
+//        int complement1 = findComplement(b);
+//        System.out.println(complement+"-----"+complement1);
+        /*---------------------------------------------*/
+//        String s = "hello";
+//        String s1 = reverseString(s);
+//        System.out.println(s1);
+        /*---------------------------------------------*/
 
     }
 
@@ -856,5 +867,80 @@ public class Main {
         }
 
         return ans;
+    }
+
+    /**
+     * Given a positive integer, output its complement number.
+     * The complement strategy is to flip the bits of its binary representation.
+
+     Note:
+     The given integer is guaranteed to fit within the range of a 32-bit signed integer.
+     You could assume no leading zero bit in the integer’s binary representation.
+     Example 1:
+     Input: 5
+     Output: 2
+     Explanation: The binary representation of 5 is 101 (no leading zero bits),
+     and its complement is 010. So you need to output 2.
+     Example 2:
+     Input: 1
+     Output: 0
+     Explanation: The binary representation of 1 is 1 (no leading zero bits),
+     and its complement is 0. So you need to output 0.
+     */
+    public static int findComplement(int num) {
+        String s = Integer.toBinaryString(num);
+        char[] chars = s.toCharArray();
+        StringBuffer sb = new StringBuffer("");
+        for (Character c:chars){
+            if (c == '1'){
+                sb.append('0');
+            }else {
+                sb.append('1');
+            }
+        }
+
+        Integer result = Integer.valueOf(sb.toString(),2);
+        return result;
+    }
+    /**
+     * solution
+     *
+     * assume num = 5
+     5' binary = 1(sign)0(leading 0)101(number)
+     if we do ~5 directly the system will give us 0(sign) 1010 = -6
+     so if we want do bit operation the problem is to handle sign and leading zero
+
+     if we have 0, we do ~0 we get 1(sing) 1, after that we do left shifting 3( '5' 's binary length)
+     we get 1 1000
+     then we do ~(1 1000)
+     we get 0 0111
+     then we get the sign 's value and leading 0(if have)
+     then we do xor with original value
+     we get our result
+     */
+    public static int findComplementSolution(int num) {
+        return (num^(~(~0<<(Integer.toBinaryString(num).length()))));
+    }
+
+    /**
+     * Write a function that takes a string as input and returns the string reversed.
+
+     Example:
+     Given s = "hello", return "olleh".
+     */
+    public static String reverseString(String s) {
+        char[] chars = s.toCharArray();
+        StringBuilder sb = new StringBuilder("");
+        for (int i = chars.length-1;i>=0;--i){
+            sb.append(chars[i]);
+        }
+        return sb.toString();
+    }
+    /**
+     * one-line solution
+     *
+     */
+    public static String reverseStringSolution(String s) {
+        return new StringBuffer().append(s).reverse().toString();
     }
 }
